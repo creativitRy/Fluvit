@@ -9,15 +9,18 @@
 #include <GLFW/glfw3.h>
 
 struct Input {
-    static float yaw;
-    static float pitch;
+    static double mouse_x;
+    static double mouse_y;
+
+    static float mouse_x_delta;
+    static float mouse_y_delta;
+
+    static bool left_click;
+    static bool right_click;
 
     static float zoom;
     static float strafe;
     static float updown;
-    static bool jump;
-
-    static bool enable_gravity;
 
     static void update(GLFWwindow *window, float window_width, float window_height);
 };

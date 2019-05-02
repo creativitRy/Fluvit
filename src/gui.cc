@@ -44,10 +44,6 @@ void GUI::keyCallback(int key, int scancode, int action, int mods) {
         glfwSetWindowShouldClose(window_, GL_TRUE);
         return;
     }
-    if (key == GLFW_KEY_F && (mods & GLFW_MOD_CONTROL) && action == GLFW_RELEASE) {
-        Input::enable_gravity = !Input::enable_gravity;
-        return;
-    }
     if (key == GLFW_KEY_J && action == GLFW_RELEASE) {
         // save out a screenshot using SaveJPEG
         uint8_t pixels[3 * window_width_ * window_height_];

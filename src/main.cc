@@ -21,12 +21,10 @@
 #include <glm/gtx/io.hpp>
 #include <debuggl.h>
 #include "common_uniforms.h"
-#include "minecraft/Chunk.h"
 #include "minecraft/perlin.h"
-#include "minecraft/World.h"
-#include "minecraft/Character.h"
 #include "Input.h"
 #include "fluvit/Terrain.h"
+#include "fluvit/Camera.h"
 
 int window_width = 1600;
 int window_height = 900;
@@ -72,14 +70,11 @@ int main(int argc, char *argv[]) {
 
     // entities
     Terrain terrain;
-    World world;
-    Character character(world, (float) window_width / window_height);
-    std::function<glm::vec3()> cam_data = [&character]() { return character.getPos(); };
-    world.setCameraPos(cam_data);
-    world.setYaw((std::function<float()>) [&character]() {return character.yaw;});
+    Camera camera((float) window_width / window_height);
+    std::function<glm::vec3()> cam_data = [&camera]() { return camera.getPos(); };
     Floor floor;
     floor.setCameraPos(cam_data);
-    
+
     // shaders
     glm::vec4 light_position = glm::vec4(0.0f, 100.0f, 0.0f, 1.0f);
     MatrixPointers mats{}; // Define MatrixPointers here for lambda to capture
@@ -96,8 +91,7 @@ int main(int argc, char *argv[]) {
 
     // start
     terrain.start();
-    world.start();
-    character.start();
+    camera.start();
     floor.start();
 
     while (!glfwWindowShouldClose(window)) {
@@ -107,8 +101,7 @@ int main(int argc, char *argv[]) {
         {
             Input::update(window, window_width, window_height);
 
-            world.update();
-            character.update();
+            camera.update();
         }
 
         // Setup some basic window stuff.
@@ -123,10 +116,7 @@ int main(int argc, char *argv[]) {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glfwGetFramebufferSize(window, &window_width, &window_height);
         glViewport(0, 0, window_width, window_height);
-        if (cam_data().y < 61.875f - 1.75f)
-            glClearColor(0.1f, 0.1f, 0.3f, 0.0f);
-        else
-            glClearColor(0.7f, 0.7f, 1.0f, 0.0f);
+        glClearColor(0.7f, 0.7f, 1.0f, 0.0f);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_MULTISAMPLE);
         glEnable(GL_BLEND);
@@ -136,12 +126,15 @@ int main(int argc, char *argv[]) {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glCullFace(GL_BACK);
 
-        mats = character.getMatrixPointers();
+        mats = camera.getMatrixPointers();
 
         // render
         {
             if (terrain.enabled)
                 terrain.render();
+
+            if (floor.enabled)
+                floor.render();
         }
 
         // Poll and swap.

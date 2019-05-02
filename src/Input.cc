@@ -2,21 +2,34 @@
 // Created by gahwon on 4/17/19.
 //
 
+#include <iostream>
 #include "Input.h"
 
-float Input::yaw;
-float Input::pitch;
+double Input::mouse_x;
+double Input::mouse_y;
+
+float Input::mouse_x_delta;
+float Input::mouse_y_delta;
+
+bool Input::left_click;
+bool Input::right_click;
 
 float Input::zoom;
 float Input::strafe;
 float Input::updown;
-bool Input::jump;
-
-bool Input::enable_gravity = true;
 
 void Input::update(GLFWwindow *window, float window_width, float window_height) {
     double x, y;
     glfwGetCursorPos(window, &x, &y);
+
+    mouse_x_delta = x - mouse_x;
+    mouse_y_delta = y - mouse_y;
+
+    mouse_x = x;
+    mouse_y = y;
+
+    left_click = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+    right_click = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 
     zoom = 0.0f;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -35,6 +48,4 @@ void Input::update(GLFWwindow *window, float window_width, float window_height) 
         updown -= 1.0f;
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         updown += 1.0f;
-
-    jump = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
 }

@@ -25,7 +25,7 @@ private:
     const float kFloorXMax = 1000.0f;
     const float kFloorZMin = -1000.0f;
     const float kFloorZMax = 1000.0f;
-    const float kFloorY = 61.875f;
+    const float kFloorY = -2;
 
     std::vector<glm::vec4> vertices;
     std::vector<glm::uvec3> faces;
