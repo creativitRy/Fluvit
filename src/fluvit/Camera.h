@@ -9,9 +9,15 @@
 #include "../Entity.h"
 #include "../gui.h"
 
+enum RenderMode {
+    wireframe,
+    sim_debug,
+    normal
+};
+
 class Camera : public Entity {
-    static constexpr float kNear = 0.1f;
-    static constexpr float kFar = 1000.0f;
+    static constexpr float kNear = 0.01f;
+    static constexpr float kFar = 10.0f;
     static constexpr float kFov = 45.0f;
 
     static constexpr float yaw_speed = 0.3f;
@@ -28,12 +34,16 @@ class Camera : public Entity {
     glm::mat4 view_matrix{1};
     glm::mat4 projection_matrix;
 
+    RenderMode mode = RenderMode::normal;
+
 public:
     explicit Camera(float aspect);
 
     void start() override;
 
     void update() override;
+
+    void render() override;
 
     const glm::vec3 &getPos() const {
         return position;

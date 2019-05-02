@@ -31,6 +31,30 @@ void Camera::update() {
     position += glm::vec3(mat * movement);
 
     view_matrix = glm::inverse(glm::translate(glm::mat4(1), position) * glm::yawPitchRoll(yaw, pitch, 0.0f));
+
+    if (!Input::nums[1] && Input::prev_nums[1])
+        mode = RenderMode::wireframe;
+    if (!Input::nums[2] && Input::prev_nums[2])
+        mode = RenderMode::sim_debug;
+    if (!Input::nums[3] && Input::prev_nums[3])
+        mode = RenderMode::normal;
+}
+
+void Camera::render() {
+    glClearColor(0.7f, 0.7f, 1.0f, 0.0f);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
+    glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDepthFunc(GL_LESS);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glCullFace(GL_BACK);
+
+    if (mode == wireframe)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    else
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 MatrixPointers Camera::getMatrixPointers() const {

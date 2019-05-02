@@ -116,16 +116,8 @@ int main(int argc, char *argv[]) {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glfwGetFramebufferSize(window, &window_width, &window_height);
         glViewport(0, 0, window_width, window_height);
-        glClearColor(0.7f, 0.7f, 1.0f, 0.0f);
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_MULTISAMPLE);
-        glEnable(GL_BLEND);
-        glEnable(GL_CULL_FACE);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glDepthFunc(GL_LESS);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glCullFace(GL_BACK);
 
+        camera.render();
         mats = camera.getMatrixPointers();
 
         // render

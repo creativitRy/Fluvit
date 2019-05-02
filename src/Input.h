@@ -22,6 +22,9 @@ struct Input {
     static float strafe;
     static float updown;
 
+    static bool nums[10];
+    static bool prev_nums[10];
+
     static void update(GLFWwindow *window, float window_width, float window_height);
 };
 

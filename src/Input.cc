@@ -18,6 +18,9 @@ float Input::zoom;
 float Input::strafe;
 float Input::updown;
 
+bool Input::nums[10];
+bool Input::prev_nums[10];
+
 void Input::update(GLFWwindow *window, float window_width, float window_height) {
     double x, y;
     glfwGetCursorPos(window, &x, &y);
@@ -48,4 +51,9 @@ void Input::update(GLFWwindow *window, float window_width, float window_height) 
         updown -= 1.0f;
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         updown += 1.0f;
+
+    for (auto i = 0; i < 10; ++i) {
+        prev_nums[i] = nums[i];
+        nums[i] = glfwGetKey(window, GLFW_KEY_0 + i) == GLFW_PRESS;
+    }
 }
