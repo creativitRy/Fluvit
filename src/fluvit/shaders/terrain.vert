@@ -1,10 +1,13 @@
 R"zzz(
 #version 330 core
-uniform vec4 light_position;
 in vec4 vertex_position;
+uniform vec4 light_position;
+uniform sampler2D simulation;
 out vec4 vs_light_direction;
 void main() {
-	gl_Position = vertex_position;
-	vs_light_direction = light_position - gl_Position;
+	vec4 pos = vertex_position;
+	pos.y = texture(simulation, vec2(pos.x, pos.z)).x;
+	gl_Position = pos;
+	vs_light_direction = light_position - pos;
 }
 )zzz"

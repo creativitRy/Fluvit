@@ -22,11 +22,18 @@ const char* fragment_shader =
 // @formatter:on
 }
 
+Terrain::Terrain(Simulation &simulation) : simulation(simulation) {}
+
 void Terrain::start() {
     init_terrain(num_rows, num_cols);
 
     model = make_uniform("model", (std::function<glm::mat4()>) []() {
         return glm::translate(glm::vec3(-0.5f, 0, -0.5f));
+    });
+    sim_texture = make_texture("simulation", (std::function<int()>) [this]() {
+        return simulation.get_sampler();
+    }, 0, (std::function<int()>) [this]() {
+        return simulation.get_fbo();
     });
 
     input.assign(0, "vertex_position", vertices.data(), vertices.size(), 4, GL_FLOAT);

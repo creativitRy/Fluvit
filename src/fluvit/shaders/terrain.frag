@@ -5,6 +5,8 @@ in vec4 light_direction;
 in vec4 world_position;
 in float top_height;
 
+uniform sampler2D simulation;
+
 out vec4 fragment_color;
 
 float rand(vec2 co){
@@ -47,6 +49,7 @@ void main() {
 	float dot_nl = dot(normalize(light_direction), normalize(normal));
 	dot_nl = clamp(dot_nl, 0.5, 1.0);
 	color = clamp(dot_nl * color, 0.0, 1.0);
+	color.x = texture(simulation, vec2(i, j)).x;
 	fragment_color = vec4(color, 1.0);
 }
 )zzz"

@@ -11,9 +11,12 @@
 #include "../Entity.h"
 #include "../shader_uniform.h"
 #include "../render_pass.h"
+#include "Simulation.h"
 
 class Terrain : public Entity {
 public:
+    explicit Terrain(Simulation &simulation);
+
     void start() override;
 
     void render() override;
@@ -21,10 +24,13 @@ private:
     static constexpr uint32_t num_rows = 256;
     static constexpr uint32_t num_cols = 256;
 
+    Simulation simulation;
+
     std::vector<glm::vec4> vertices;
     std::vector<glm::uvec3> faces;
 
     std::shared_ptr<ShaderUniformBase> model;
+    std::shared_ptr<TextureCombo> sim_texture;
 
     RenderDataInput input;
     RenderPass *pass;

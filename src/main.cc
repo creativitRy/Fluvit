@@ -25,6 +25,7 @@
 #include "Input.h"
 #include "fluvit/Terrain.h"
 #include "fluvit/Camera.h"
+#include "fluvit/Simulation.h"
 
 int window_width = 1600;
 int window_height = 900;
@@ -69,7 +70,8 @@ int main(int argc, char *argv[]) {
     GUI gui(window);
 
     // entities
-    Terrain terrain;
+    Simulation sim;
+    Terrain terrain{sim};
     Camera camera((float) window_width / window_height);
     std::function<glm::vec3()> cam_data = [&camera]() { return camera.getPos(); };
     Floor floor;
@@ -83,13 +85,16 @@ int main(int argc, char *argv[]) {
     std::function<glm::mat4()> view_data = [&mats]() { return *mats.view; };
     std::function<glm::mat4()> proj_data = [&mats]() { return *mats.projection; };
     std::function<glm::vec4()> lp_data = [&light_position]() { return light_position; };
+    std::function<float()> time_data = []() { return Time::time; };
 
     common_uniforms::instance.view = make_uniform("view", view_data);
     common_uniforms::instance.camera_position = make_uniform("camera_position", cam_data);
     common_uniforms::instance.projection = make_uniform("projection", proj_data);
     common_uniforms::instance.light_position = make_uniform("light_position", lp_data);
+    common_uniforms::instance.time = make_uniform("time", time_data);
 
     // start
+    sim.start();
     terrain.start();
     camera.start();
     floor.start();
@@ -102,6 +107,7 @@ int main(int argc, char *argv[]) {
             Input::update(window, window_width, window_height);
 
             camera.update();
+            sim.update();
         }
 
         // Setup some basic window stuff.

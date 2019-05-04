@@ -13,6 +13,7 @@ public:
     std::shared_ptr<ShaderUniformBase> camera_position;
     std::shared_ptr<ShaderUniformBase> projection;
     std::shared_ptr<ShaderUniformBase> light_position;
+    std::shared_ptr<ShaderUniformBase> time;
 };
 
 #endif //GLSL_COMMON_UNIFORMS_H
