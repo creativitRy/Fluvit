@@ -15,7 +15,7 @@
 
 class Terrain : public Entity {
 public:
-    explicit Terrain(Simulation &simulation);
+    explicit Terrain(Simulation *simulation);
 
     void start() override;
 
@@ -24,7 +24,7 @@ private:
     static constexpr uint32_t num_rows = 256;
     static constexpr uint32_t num_cols = 256;
 
-    Simulation simulation;
+    Simulation *simulation;
 
     std::vector<glm::vec4> vertices;
     std::vector<glm::uvec3> faces;

@@ -1,7 +1,7 @@
 R"zzz(
 #version 330 core
 in vec4 pos;
-
+uniform float time;
 out vec4 fragment_color;
 
 float rand(vec2 co){
@@ -16,6 +16,6 @@ float noise(vec3 pos) {
 }
 
 void main() {
-    fragment_color = vec4(pos.x, 0.0, 0.0, 1.0);
+    fragment_color = vec4(fract(time), 0.0, 0.0, 1.0);
 }
 )zzz"

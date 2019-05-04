@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 
     // entities
     Simulation sim;
-    Terrain terrain{sim};
+    Terrain terrain{&sim};
     Camera camera((float) window_width / window_height);
     std::function<glm::vec3()> cam_data = [&camera]() { return camera.getPos(); };
     Floor floor;

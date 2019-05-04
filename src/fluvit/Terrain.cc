@@ -22,7 +22,7 @@ const char* fragment_shader =
 // @formatter:on
 }
 
-Terrain::Terrain(Simulation &simulation) : simulation(simulation) {}
+Terrain::Terrain(Simulation *simulation) : simulation(simulation) {}
 
 void Terrain::start() {
     init_terrain(num_rows, num_cols);
@@ -30,10 +30,10 @@ void Terrain::start() {
     model = make_uniform("model", (std::function<glm::mat4()>) []() {
         return glm::translate(glm::vec3(-0.5f, 0, -0.5f));
     });
-    sim_texture = make_texture("simulation", (std::function<int()>) [this]() {
-        return simulation.get_sampler();
-    }, 0, (std::function<int()>) [this]() {
-        return simulation.get_fbo();
+    sim_texture = make_texture("simulation", (std::function<uint32_t()>) [this]() {
+        return simulation->get_sampler();
+    }, 0, (std::function<uint32_t()>) [this]() {
+        return simulation->get_texture();
     });
 
     input.assign(0, "vertex_position", vertices.data(), vertices.size(), 4, GL_FLOAT);
@@ -42,7 +42,7 @@ void Terrain::start() {
                           input,
                           {vertex_shader, geometry_shader, fragment_shader},
                           {model, common_uniforms::instance.view, common_uniforms::instance.projection,
-                           common_uniforms::instance.light_position},
+                           common_uniforms::instance.light_position, sim_texture},
                           {"fragment_color"}
     );
 }

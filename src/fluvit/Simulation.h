@@ -30,7 +30,7 @@ public:
 
     void update() override;
 
-    GLuint get_fbo() const { return fbo; }
+    GLuint get_texture() const { return renderedTexture; }
     GLuint get_sampler() const { return sampler2d; }
 };
 
