@@ -55,22 +55,23 @@ void Terrain::render() {
 }
 
 void Terrain::init_terrain(int rows, int cols) {
+    // todo: fix bugs
     auto dx = 1.0f / rows;
     auto dz = 1.0f / cols;
 
     auto flipped = false;
     for (auto z = 0; z <= cols; ++z) {
-        auto startz = z * dz;
+        auto startz = glm::min(z * dz, 1.0f);
 
         if (flipped) {
             vertices.emplace_back(0, 0, startz, 1);
             for (auto x = 0; x < rows; ++x) {
-                vertices.emplace_back(x * dx + dx * 0.5f, 0, startz, 1);
+                vertices.emplace_back(glm::min(x * dx + dx * 0.5f, 1.0f), 0, startz, 1);
             }
             vertices.emplace_back(1.0f, 0, startz, 1);
         } else {
             for (auto x = 0; x <= rows; ++x) {
-                vertices.emplace_back(x * dx, 0, startz, 1);
+                vertices.emplace_back(glm::min(x * dx, 1.0f), 0, startz, 1);
             }
         }
 

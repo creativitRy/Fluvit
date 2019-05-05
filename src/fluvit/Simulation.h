@@ -19,18 +19,21 @@ class Simulation : public Entity {
     std::vector<glm::vec4> vertices;
     std::vector<glm::uvec3> faces;
 
+    bool output_to_second_texture = false;
+    GLuint fbo;
+    GLuint render_texture[2];
+    GLuint sampler2d;
+
+    std::shared_ptr<TextureCombo> input_texture;
+
     RenderDataInput input;
     RenderPass *pass;
-
-    GLuint fbo;
-    GLuint renderedTexture;
-    GLuint sampler2d;
 public:
     void start() override;
 
     void update() override;
 
-    GLuint get_texture() const { return renderedTexture; }
+    GLuint get_texture() const { return render_texture[output_to_second_texture ? 1 : 0]; }
     GLuint get_sampler() const { return sampler2d; }
 };
 
