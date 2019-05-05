@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 #include <iostream>
 #include <stdlib.h>
+#include "../minecraft/perlin.h"
 
 namespace {
 // @formatter:off
@@ -16,8 +17,25 @@ const char *vertex_shader =
 
 const char *fragment_shader =
 #include "shaders/sim.frag"
+
 ;
 // @formatter:on
+}
+
+Simulation::Simulation(int width, int height, const std::string& image) : width(width), height(height) {
+    if (image.empty()) {
+        // procedurally generate perlin terrain
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                auto h = (uint32_t) glm::clamp(perlin::noise(col * 0.25f, row * 0.25f) * 128.0 + 32.0, 0.0, 255.0);
+                starting_terrain_data.emplace_back(h | (h << 8u) | (0u << 16u) | (0u << 24u));
+            }
+        }
+    } else {
+        // load image
+        // todo
+    }
 }
 
 void Simulation::start() {
@@ -44,12 +62,13 @@ void Simulation::start() {
             // "Bind" the newly created texture : all future texture functions will modify this texture
             glBindTexture(GL_TEXTURE_2D, texture);
             // Give an empty image to OpenGL ( the last "0" )
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, starting_terrain_data.data());
             // Poor filtering. Needed !
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         }
 
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, render_texture[output_to_second_texture ? 1 : 0], 0);
         // Set the list of draw buffers.
         GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
         glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
@@ -63,8 +82,8 @@ void Simulation::start() {
     // sampler
     {
         CHECK_GL_ERROR(glGenSamplers(1, &sampler2d));
-        CHECK_GL_ERROR(glSamplerParameteri(sampler2d, GL_TEXTURE_WRAP_S, GL_REPEAT));
-        CHECK_GL_ERROR(glSamplerParameteri(sampler2d, GL_TEXTURE_WRAP_T, GL_REPEAT));
+        CHECK_GL_ERROR(glSamplerParameteri(sampler2d, GL_TEXTURE_WRAP_S, GL_CLAMP));
+        CHECK_GL_ERROR(glSamplerParameteri(sampler2d, GL_TEXTURE_WRAP_T, GL_CLAMP));
         CHECK_GL_ERROR(glSamplerParameteri(sampler2d, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
         CHECK_GL_ERROR(glSamplerParameteri(sampler2d, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
     }
@@ -104,6 +123,7 @@ void Simulation::update() {
         glEnable(GL_BLEND);
         glClear(GL_COLOR_BUFFER_BIT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         pass->setup();
         pass->render();

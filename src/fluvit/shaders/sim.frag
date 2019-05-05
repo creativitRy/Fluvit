@@ -18,7 +18,8 @@ float noise(vec3 pos) {
 
 void main() {
     //fragment_color = vec4(sin(time * 0.5 + pos.x + pos.y) * 0.5 + 0.5, 0.0, 0.0, 1.0);
-    float height = fract(texture(input_texture, pos).x + 0.01 * rand(pos + 7.0 * time));
+    float height = fract(texture(input_texture, pos).x /*+ 0.01 * rand(pos + 7.0 * time)*/);
+    //height = sin(pos.x + pos.y) * 0.5 + 0.5;
     fragment_color = vec4(height, 0.0, 0.0, 1.0);
 }
 )zzz"

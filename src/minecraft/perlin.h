@@ -13,7 +13,7 @@ class perlin {
 public:
     static void init();
 
-    static double noise(int x, int y);
+    static double noise(float x, float y);
 private:
     static constexpr float initial_scale = 0.012f;
 
@@ -22,7 +22,7 @@ private:
 
     explicit perlin(uint32_t seed);
 
-    float octave(int x, int y);
+    float octave(float x, float y);
 
     float noise(glm::vec2 pos);
 

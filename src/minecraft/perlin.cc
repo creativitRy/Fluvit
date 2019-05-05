@@ -17,7 +17,7 @@ void perlin::init() {
         instance = new perlin(time(nullptr));
 }
 
-double perlin::noise(int x, int y) {
+double perlin::noise(float x, float y) {
     auto octave = 0.5 * instance->octave(x, y) + 0.5;
     return octave * octave * octave + 0.05;
 }
@@ -32,7 +32,7 @@ perlin::perlin(uint32_t seed) : random_unit_vectors() {
                  std::default_random_engine(seed));
 }
 
-float perlin::octave(int x, int y) {
+float perlin::octave(float x, float y) {
     auto pos = initial_scale * glm::vec2(x, y);
     return noise(pos * 0.8f) + 0.5f * noise(pos * 2.0f) + 0.25f * noise(pos * 4.0f) + 0.125f * noise(pos * 8.0f);
 }

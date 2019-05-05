@@ -16,6 +16,13 @@ class Simulation : public Entity {
     int width = 1024;
     int height = 1024;
 
+    /// vector of size height * width with r | g << 8 | b << 16 | a << 24 in that order
+    /// r = terrain height
+    /// g = original terrain height
+    /// b = water height
+    /// a = dissolved soil in water
+    std::vector<uint32_t> starting_terrain_data;
+
     std::vector<glm::vec4> vertices;
     std::vector<glm::uvec3> faces;
 
@@ -29,6 +36,8 @@ class Simulation : public Entity {
     RenderDataInput input;
     RenderPass *pass;
 public:
+    explicit Simulation(int width = 1024, int height = 1024, const std::string& image = "");
+
     void start() override;
 
     void update() override;

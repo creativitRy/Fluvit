@@ -55,7 +55,6 @@ void Terrain::render() {
 }
 
 void Terrain::init_terrain(int rows, int cols) {
-    // todo: fix bugs
     auto dx = 1.0f / rows;
     auto dz = 1.0f / cols;
 
@@ -93,7 +92,7 @@ void Terrain::init_terrain(int rows, int cols) {
             }
         } else {
             auto top_index = index + rows + 1;
-            faces.emplace_back(index, top_index, top_index + 1);
+            faces.emplace_back(index + 0, top_index, top_index + 1);
             ++top_index;
             for (auto x = 0; x < rows; ++x) {
                 faces.emplace_back(index + 0, top_index + 0, index + 1);
@@ -103,6 +102,11 @@ void Terrain::init_terrain(int rows, int cols) {
             }
         }
 
+        ++index;
         flipped = !flipped;
     }
+
+//    for (auto face : faces)
+//        std::cout << vertices[face.x].x << ", " << vertices[face.x].z << ") == (" << vertices[face.y].x << ", "
+//                  << vertices[face.y].z << ") == (" << vertices[face.z].x << ", " << vertices[face.z].z << std::endl;
 }
