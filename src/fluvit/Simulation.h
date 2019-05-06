@@ -36,7 +36,7 @@ class Simulation : public Entity {
     RenderDataInput input;
     RenderPass *pass;
 public:
-    explicit Simulation(int width = 1024, int height = 1024, const std::string& image = "");
+    explicit Simulation(const std::string& image = "");
 
     void start() override;
 

@@ -63,14 +63,21 @@ GLFWwindow *init_glefw() {
 }
 
 int main(int argc, char *argv[]) {
+    if (argc > 1 && (std::string{"-h"} == argv[1] || std::string{"--help"} == argv[1])) {
+        std::cout << "Usages" << std::endl;
+        std::cout << "Run with no arguments to generate random 1024x1024 terrain" << std::endl;
+        std::cout << "pass file path to png to load from that heightmap (only red channel used)" << std::endl;
+        return 0;
+    }
+
+    // init
     Time::time = 0.0f;
     perlin::init();
-
     GLFWwindow *window = init_glefw();
     GUI gui(window);
 
     // entities
-    Simulation sim;
+    Simulation sim{argc == 2 ? argv[1] : ""};
     Terrain terrain{&sim};
     Camera camera((float) window_width / window_height);
     std::function<glm::vec3()> cam_data = [&camera]() { return camera.getPos(); };
@@ -78,7 +85,7 @@ int main(int argc, char *argv[]) {
     floor.setCameraPos(cam_data);
 
     // shaders
-    glm::vec4 light_position = glm::vec4(0.0f, 100.0f, 0.0f, 1.0f);
+    glm::vec4 light_position = glm::vec4(10.0f, 10.0f, 10.0f, 1.0f);
     MatrixPointers mats{}; // Define MatrixPointers here for lambda to capture
 
     // CAVEAT: DO NOT RETURN const T& in functions, which compiles but causes segfaults.
