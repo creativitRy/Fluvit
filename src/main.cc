@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
     }
 
     // init
-    Time::time = 0.0f;
+    Time::init();
     perlin::init();
     GLFWwindow *window = init_glefw();
     GUI gui(window);
@@ -93,12 +93,14 @@ int main(int argc, char *argv[]) {
     std::function<glm::mat4()> proj_data = [&mats]() { return *mats.projection; };
     std::function<glm::vec4()> lp_data = [&light_position]() { return light_position; };
     std::function<float()> time_data = []() { return Time::time; };
+    std::function<float()> fixed_time_data = []() { return Time::fixed_time; };
 
     common_uniforms::instance.view = make_uniform("view", view_data);
     common_uniforms::instance.camera_position = make_uniform("camera_position", cam_data);
     common_uniforms::instance.projection = make_uniform("projection", proj_data);
     common_uniforms::instance.light_position = make_uniform("light_position", lp_data);
     common_uniforms::instance.time = make_uniform("time", time_data);
+    common_uniforms::instance.fixed_time = make_uniform("fixed_time", fixed_time_data);
 
     // start
     sim.start();
@@ -114,7 +116,9 @@ int main(int argc, char *argv[]) {
             Input::update(window, window_width, window_height);
 
             camera.update();
-            sim.update();
+
+            while (Time::fixed_update())
+                sim.update();
         }
 
         // Setup some basic window stuff.

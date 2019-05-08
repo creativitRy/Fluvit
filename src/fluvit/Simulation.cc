@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "../minecraft/perlin.h"
 #include "pngio.h"
+#include "../time.h"
 
 namespace {
 // @formatter:off
@@ -114,7 +115,7 @@ void Simulation::start() {
         pass = new RenderPass(-1,
                               input,
                               {vertex_shader, nullptr, fragment_shader},
-                              {common_uniforms::instance.time, input_texture},
+                              {common_uniforms::instance.fixed_time, input_texture},
                               {"fragment_color"}
         );
     }
