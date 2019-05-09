@@ -20,7 +20,7 @@ class Simulation : public Entity {
     /// r = terrain height
     /// g = original terrain height
     /// b = water height
-    /// a = dissolved soil in water
+    /// a = dissolved soil in water TODO CANNOT USE A AS ANYTHIG SINCE IT HAS TO BE 1.0
     std::vector<uint32_t> starting_terrain_data;
 
     std::vector<glm::vec4> vertices;

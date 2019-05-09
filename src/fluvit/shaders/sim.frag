@@ -1,9 +1,20 @@
 R"zzz(
 #version 330 core
-in vec2 pos;
-uniform float time;
+uniform float fixed_time;
 uniform sampler2D input_texture;
+
+in vec2 pos;
 out vec4 fragment_color;
+
+/*
+5 steps:
+
+1. Water level increases from various sources
+2. Flow is simulated
+3. Erosion deposition
+4. Suspended sediments transported
+5. Water evaporation
+*/
 
 float rand(vec2 co){
     // https://stackoverflow.com/questions/4200224/random-noise-functions-for-glsl
@@ -17,9 +28,12 @@ float noise(vec3 pos) {
 }
 
 void main() {
-    //fragment_color = vec4(sin(time * 0.5 + pos.x + pos.y) * 0.5 + 0.5, 0.0, 0.0, 1.0);
-    float height = fract(texture(input_texture, pos).x /*+ 0.01 * rand(pos + 7.0 * time)*/);
-    //height = sin(pos.x + pos.y) * 0.5 + 0.5;
-    fragment_color = vec4(height, 0.0, 0.0, 1.0);
+    vec4 tex = texture(input_texture, pos);
+    float initial_height = tex.y;
+    float height = tex.x;
+    float water_height = height + tex.z;
+    float sediments_rel_height = tex.a;
+
+    fragment_color = vec4(height, initial_height, clamp(water_height - height, 0.0, 1.0), 1.0);
 }
 )zzz"

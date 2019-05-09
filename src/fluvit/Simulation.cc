@@ -23,28 +23,33 @@ const char *fragment_shader =
 // @formatter:on
 }
 
-Simulation::Simulation(const std::string &image) {
+Simulation::Simulation(const std::string &image) : starting_terrain_data{} {
     if (image.empty()) {
         // procedurally generate perlin terrain
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                auto h = (uint32_t) glm::clamp(perlin::noise(col * 0.25f, row * 0.25f) * 128.0 + 32.0, 0.0, 255.0);
+        for (int col = 0; col < height; col++) {
+            for (int row = 0; row < width; row++) {
+                auto h = (uint32_t) glm::clamp(perlin::noise(row * 0.25f, col * 0.25f) * 128.0 + 32.0, 0.0, 255.0);
                 starting_terrain_data.emplace_back(h | (h << 8u) | (0u << 16u) | (0u << 24u));
             }
         }
     } else {
         // load image
-        if (!pngio::load(image, starting_terrain_data, width, height)) {
+        std::vector<uint32_t> temp;
+        if (!pngio::load(image, temp, width, height)) {
             std::cerr << "Illegal png file " << image << std::endl;
             abort();
         }
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                auto data = starting_terrain_data[row * width + height];
+        for (int col = 0; col < height; col++) {
+            for (int row = 0; row < width; row++) {
+                auto index = col * width + row;
+
+                auto data = temp[index];
                 auto h = data & 0xffu;
                 starting_terrain_data.emplace_back(h | (h << 8u) | (0u << 16u) | (0u << 24u));
             }
         }
+
+        std::cout << "Successfully read in heightmap " << image << std::endl;
     }
 }
 
@@ -71,10 +76,8 @@ void Simulation::start() {
         for (unsigned int texture : render_texture) {
             // "Bind" the newly created texture : all future texture functions will modify this texture
             glBindTexture(GL_TEXTURE_2D, texture);
-            // Give an empty image to OpenGL ( the last "0" )
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                          starting_terrain_data.data());
-            // Poor filtering. Needed !
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         }
