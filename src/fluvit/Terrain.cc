@@ -19,6 +19,14 @@ const char* geometry_shader =
 const char* fragment_shader =
 #include "shaders/terrain.frag"
 ;
+
+const char* water_geometry_shader =
+#include "shaders/water.geom"
+;
+
+const char* water_fragment_shader =
+#include "shaders/water.frag"
+;
 // @formatter:on
 }
 
@@ -38,9 +46,16 @@ void Terrain::start() {
 
     input.assign(0, "vertex_position", vertices.data(), vertices.size(), 4, GL_FLOAT);
     input.assignIndex(faces.data(), faces.size(), 3);
-    pass = new RenderPass(-1,
+    terrain_pass = new RenderPass(-1,
                           input,
                           {vertex_shader, geometry_shader, fragment_shader},
+                          {model, common_uniforms::instance.view, common_uniforms::instance.projection,
+                           common_uniforms::instance.light_position, sim_texture},
+                          {"fragment_color"}
+    );
+    water_pass = new RenderPass(-1,
+                          input,
+                          {vertex_shader, water_geometry_shader, water_fragment_shader},
                           {model, common_uniforms::instance.view, common_uniforms::instance.projection,
                            common_uniforms::instance.light_position, sim_texture},
                           {"fragment_color"}
@@ -48,9 +63,13 @@ void Terrain::start() {
 }
 
 void Terrain::render() {
-    if (pass->enabled) {
-        pass->setup();
-        pass->render();
+    if (terrain_pass->enabled) {
+        terrain_pass->setup();
+        terrain_pass->render();
+    }
+    if (water_pass->enabled) {
+        water_pass->setup();
+        water_pass->render();
     }
 }
 

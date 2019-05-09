@@ -33,7 +33,8 @@ private:
     std::shared_ptr<TextureCombo> sim_texture;
 
     RenderDataInput input;
-    RenderPass *pass;
+    RenderPass *terrain_pass;
+    RenderPass *water_pass;
 
     void init_terrain(int rows, int cols);
 };

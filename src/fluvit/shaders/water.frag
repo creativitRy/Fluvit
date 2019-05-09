@@ -20,7 +20,7 @@ float noise(vec3 pos) {
 }
 
 void main() {
-	vec3 color = vec3(0.8);
+	vec3 color = vec3(0.4, 0.4, 1.0);
 	float dot_nl = dot(normalize(light_direction), normalize(normal));
 	dot_nl = clamp(dot_nl, 0.5, 1.0);
 	color = clamp(dot_nl * color, 0.0, 1.0);
