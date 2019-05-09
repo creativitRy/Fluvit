@@ -34,8 +34,7 @@ Simulation::Simulation(const std::string &image) : starting_terrain_data{} {
         }
     } else {
         // load image
-        std::vector<uint32_t> temp;
-        if (!pngio::load(image, temp, width, height)) {
+        if (!pngio::load(image, starting_terrain_data, width, height)) {
             std::cerr << "Illegal png file " << image << std::endl;
             abort();
         }
@@ -43,9 +42,9 @@ Simulation::Simulation(const std::string &image) : starting_terrain_data{} {
             for (int row = 0; row < width; row++) {
                 auto index = col * width + row;
 
-                auto data = temp[index];
+                auto data = starting_terrain_data[index];
                 auto h = data & 0xffu;
-                starting_terrain_data.emplace_back(h | (h << 8u) | (0u << 16u) | (0u << 24u));
+                starting_terrain_data[index] = (h | (h << 8u) | (0u << 16u) | (0u << 24u));
             }
         }
 
