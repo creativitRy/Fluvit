@@ -205,6 +205,8 @@ void Simulation::start() {
         }, 1, (std::function<uint32_t()>) [this]() {
             return texture3;
         });
+
+        grid_delta = make_uniform("grid_delta", (std::function<glm::vec2()>) [this]() { return 1.0f / glm::vec2(width, height); });
     }
 
     // render pass
@@ -216,15 +218,17 @@ void Simulation::start() {
         passes[0] = new RenderPass(-1,
                                    input,
                                    {vertex_shader, nullptr, sim1_shader},
-                                   {common_uniforms::instance.fixed_time, common_uniforms::instance.fixed_delta_time, input_texture1,
-                                    CONSTANT(min_raindrop_radius), CONSTANT(max_raindrop_radius),
+                                   {common_uniforms::instance.fixed_time, common_uniforms::instance.fixed_delta_time,
+                                    input_texture1, CONSTANT(min_raindrop_radius), CONSTANT(max_raindrop_radius),
                                     CONSTANT(min_raindrop_amount), CONSTANT(max_raindrop_amount)},
                                    {"output_texture1"}
         );
         passes[1] = new RenderPass(-1,
                                    input,
                                    {vertex_shader, nullptr, sim2_shader},
-                                   {common_uniforms::instance.fixed_delta_time, input_texture1_swap, input_texture2},
+                                   {common_uniforms::instance.fixed_delta_time, input_texture1_swap, input_texture2,
+                                    CONSTANT(gravity), CONSTANT(area_over_len), CONSTANT(grid_distance_x),
+                                    CONSTANT(grid_distance_y), grid_delta},
                                    {"output_texture2"}
         );
         passes[2] = new RenderPass(-1,

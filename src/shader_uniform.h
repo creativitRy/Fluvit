@@ -14,6 +14,7 @@
 
 void bindUniform(unsigned, int);
 void bindUniform(unsigned, float);
+void bindUniform(unsigned, const glm::vec2&);
 void bindUniform(unsigned, const glm::vec3&);
 void bindUniform(unsigned, const glm::vec4&);
 void bindUniform(unsigned, const glm::fquat&);

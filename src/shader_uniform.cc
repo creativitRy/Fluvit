@@ -13,6 +13,11 @@ void bindUniform(unsigned loc, float scalar)
 	glUniform1f(loc, scalar);
 }
 
+void bindUniform(unsigned loc, const glm::vec2& vec)
+{
+	CHECK_GL_ERROR(glUniform2fv(loc, 1, (const GLfloat*)&vec));
+}
+
 void bindUniform(unsigned loc, const glm::vec3& vec)
 {
 	CHECK_GL_ERROR(glUniform3fv(loc, 1, (const GLfloat*)&vec));
