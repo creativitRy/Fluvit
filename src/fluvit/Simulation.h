@@ -19,19 +19,16 @@ class Simulation : public Entity {
     std::vector<glm::vec4> vertices;
     std::vector<glm::uvec3> faces;
 
-    /// vector of size height * width with r | g << 8 | b << 16 | a << 24 in that order
-    /// r = terrain height
-    /// g = original terrain height
-    /// b = water height
-    /// a = dissolved soil in water
-    std::vector<uint32_t> starting_terrain_data;
+    /// vector of starting terrain heights in [0, 255]
+    std::vector<uint32_t> starting_terrain_height;
 
     /// r = terrain height b
     /// g = water height d
     /// b = suspended sediment amount s
     /// a = initial terrain height
     GLuint texture1;
-    GLuint texture1_temp;
+    GLuint texture1_swap;
+    bool swap_texture1 = false; // if false, then texture1_swap is output
     /// r = right flow
     /// g = top flow
     /// b = left flow
@@ -47,22 +44,40 @@ class Simulation : public Entity {
 
     GLuint render_texture[2];
     GLuint fbo;
+    std::shared_ptr<TextureCombo> input_texture;
+    RenderPass *pass;
+
+    GLuint fbos[4];
     GLuint sampler2d;
 
-    std::shared_ptr<TextureCombo> input_texture;
+    std::shared_ptr<TextureCombo> input_texture1;
+    std::shared_ptr<TextureCombo> input_texture1_swap;
+    std::shared_ptr<TextureCombo> input_texture2;
+    std::shared_ptr<TextureCombo> input_texture3;
 
     RenderDataInput input;
-    RenderPass *pass;
+    RenderPass *passes[4];
 public:
-    explicit Simulation(const std::string& image = "");
+    explicit Simulation(const std::string &image = "");
 
     void start() override;
 
     void update() override;
 
-    GLuint get_texture1() const { return texture1; }
+    /// r = terrain height b
+    /// g = water height d
+    /// b = suspended sediment amount s
+    /// a = initial terrain height
+    GLuint get_texture1() const { return swap_texture1 ? texture1 : texture1_swap; }
+
+    /// r = water velocity x
+    /// g = water velocity y
+    /// b = previous timestep sin(local tilt angle) = sin(alpha)
+    /// a = nothing
     GLuint get_texture3() const { return texture3; }
+
     GLuint get_texture() const { return render_texture[swap_texture2 ? 1 : 0]; }
+
     GLuint get_sampler() const { return sampler2d; }
 };
 

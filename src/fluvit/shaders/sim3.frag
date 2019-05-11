@@ -1,10 +1,12 @@
 R"zzz(
 #version 330 core
 uniform float delta_time;
-uniform sampler2D input_texture;
+uniform sampler2D input_texture1;
+uniform sampler2D input_texture2;
 
 in vec2 pos;
-out vec4 fragment_color;
+layout (location = 2) out vec4 output_texture1;
+layout (location = 3) out vec4 output_texture3;
 
 /*
 5 steps:
@@ -22,12 +24,12 @@ float rand(vec2 co){
 }
 
 void main() {
-    vec4 tex = texture(input_texture, pos);
+    vec4 tex = texture(input_texture1, pos);
     float initial_height = tex.y;
     float height = tex.x;
     float water_height = height + tex.z;
     float sediments_rel_height = tex.a;
 
-    fragment_color = vec4(height, initial_height, clamp(water_height - height, 0.0, 1.0), sediments_rel_height);
+    output_texture1 = vec4(height, initial_height, clamp(water_height - height, 0.0, 1.0), sediments_rel_height);
 }
 )zzz"
