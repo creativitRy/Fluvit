@@ -41,7 +41,7 @@ void Terrain::start() {
     sim_texture = make_texture("simulation", (std::function<uint32_t()>) [this]() {
         return simulation->get_sampler();
     }, 0, (std::function<uint32_t()>) [this]() {
-        return simulation->get_texture();
+        return simulation->get_texture1();
     });
 
     input.assign(0, "vertex_position", vertices.data(), vertices.size(), 4, GL_FLOAT);

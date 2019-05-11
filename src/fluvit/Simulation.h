@@ -42,11 +42,6 @@ class Simulation : public Entity {
     /// a = nothing
     GLuint texture3;
 
-    GLuint render_texture[2];
-    GLuint fbo;
-    std::shared_ptr<TextureCombo> input_texture;
-    RenderPass *pass;
-
     GLuint fbos[4];
     GLuint sampler2d;
 
@@ -75,8 +70,6 @@ public:
     /// b = previous timestep sin(local tilt angle) = sin(alpha)
     /// a = nothing
     GLuint get_texture3() const { return texture3; }
-
-    GLuint get_texture() const { return render_texture[swap_texture2 ? 1 : 0]; }
 
     GLuint get_sampler() const { return sampler2d; }
 };

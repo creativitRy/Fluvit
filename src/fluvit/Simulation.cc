@@ -126,27 +126,6 @@ void Simulation::start() {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         }
-
-        std::vector<uint32_t> old_data;
-        old_data.reserve(width * height);
-        for (int col = 0; col < height; col++) {
-            for (int row = 0; row < width; row++) {
-                auto index = col * width + row;
-                auto data = starting_terrain_height[index];
-                auto h = data & 0xffu;
-                old_data.emplace_back(convert_rgba(h, h, 0, 0));
-            }
-        }
-
-        // The texture we're going to render to
-        glGenTextures(2, render_texture);
-        for (unsigned int texture : render_texture) {
-            // "Bind" the newly created texture : all future texture functions will modify this texture
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, old_data.data());
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        }
     }
 
     // fbos
@@ -182,7 +161,7 @@ void Simulation::start() {
                 abort();
             }
 
-            glBindFramebuffer(GL_FRAMEBUFFER, fbos[1]);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbos[3]);
             glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture1_swap, 0);
             DrawBuffers[0] = GL_COLOR_ATTACHMENT0;
             glDrawBuffers(1, DrawBuffers);
@@ -190,21 +169,6 @@ void Simulation::start() {
                 std::cerr << "Framebuffer sim4 error :(" << std::endl;
                 abort();
             }
-        }
-
-        // create FBO (off-screen framebuffer)
-        glGenFramebuffers(1, &fbo);
-        // bind offscreen buffer
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, render_texture[swap_texture2 ? 1 : 0], 0);
-        // Set the list of draw buffers.
-        GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-        glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            std::cerr << "Framebuffer error :(" << std::endl;
-            abort();
         }
     }
 
@@ -231,19 +195,13 @@ void Simulation::start() {
         });
         input_texture2 = make_texture("input_texture2", (std::function<uint32_t()>) [this]() {
             return sampler2d;
-        }, 0, (std::function<uint32_t()>) [this]() {
+        }, 1, (std::function<uint32_t()>) [this]() {
             return swap_texture2 ? texture2_swap : texture2;
         });
         input_texture3 = make_texture("input_texture3", (std::function<uint32_t()>) [this]() {
             return sampler2d;
-        }, 0, (std::function<uint32_t()>) [this]() {
+        }, 1, (std::function<uint32_t()>) [this]() {
             return texture3;
-        });
-
-        input_texture = make_texture("input_texture", (std::function<uint32_t()>) [this]() {
-            return get_sampler();
-        }, 0, (std::function<uint32_t()>) [this]() {
-            return render_texture[swap_texture2 ? 0 : 1];
         });
     }
 
@@ -275,13 +233,6 @@ void Simulation::start() {
                                    {vertex_shader, nullptr, sim4_shader},
                                    {common_uniforms::instance.fixed_delta_time, input_texture1, input_texture3},
                                    {"output_texture1"}
-        );
-
-        pass = new RenderPass(-1,
-                              input,
-                              {vertex_shader, nullptr, sim1_shader},
-                              {common_uniforms::instance.fixed_delta_time, input_texture},
-                              {"fragment_color"}
         );
     }
 }
@@ -322,7 +273,7 @@ void Simulation::update() {
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, texture3, 0);
 
         glViewport(0, 0, width, height);
-        glDisable(GL_BLEND); // enable storing stuff in alpha channel
+        glDisable(GL_BLEND);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         passes[2]->setup();
@@ -335,7 +286,7 @@ void Simulation::update() {
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, swap_texture1 ? texture1 : texture1_swap, 0);
 
         glViewport(0, 0, width, height);
-        glDisable(GL_BLEND); // enable storing stuff in alpha channel
+        glDisable(GL_BLEND);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         passes[3]->setup();
@@ -343,18 +294,4 @@ void Simulation::update() {
     }
 
     swap_texture1 = !swap_texture1;
-
-    // Render to our framebuffer
-    /*glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    // Set render_texture as our color attachment #0
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, render_texture[swap_texture2 ? 1 : 0], 0);
-
-    glViewport(0, 0, width, height);
-    glDisable(GL_BLEND); // enable storing stuff in alpha channel
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    pass->setup();
-    pass->render();
-
-    swap_texture2 = !swap_texture2;*/
 }
