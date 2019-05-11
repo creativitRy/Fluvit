@@ -28,15 +28,18 @@ vec2 rand2(float n) {
 
 void main() {
     vec4 tex = texture(input_texture1, pos);
-
-    vec2 rand_pos = rand2(time);
-    float rand_radius = rand(time * 0.11 + 0.13) * (max_raindrop_radius - min_raindrop_radius) + min_raindrop_radius;
-    float rand_amount = rand(time * 0.17 + 0.23) * (max_raindrop_amount - min_raindrop_amount) + min_raindrop_amount;
-    vec2 delta = pos - rand_pos;
-
     float d = tex.y;
-    if (dot(delta, delta) <= rand_radius * rand_radius)
+
+    float i;
+    for (i = 1; i <= 4; i += 1) {
+        vec2 rand_pos = rand2(time * i);
+        float rand_radius = rand(time * 0.11 * i + 0.13) * (max_raindrop_radius - min_raindrop_radius) + min_raindrop_radius;
+        float rand_amount = rand(time * 0.17 * i + 0.23) * (max_raindrop_amount - min_raindrop_amount) + min_raindrop_amount;
+        vec2 delta = pos - rand_pos;
+
+        if (dot(delta, delta) <= rand_radius * rand_radius)
         d += rand_amount * delta_time;
+    }
 
     output_texture1 = vec4(tex.x, min(d, 1.0), tex.z, tex.w);
 }

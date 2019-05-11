@@ -15,21 +15,22 @@ out float top_height;
 
 void main() {
 	float global_height_scale = 0.5;
+	float global_water_offset_height = -0.01;
 
 	vec3 positions[3];
 	vec4 tex;
 
 	positions[0] = gl_in[0].gl_Position.xyz;
 	tex = texture(simulation, vec2(positions[0].x, positions[0].z));
-	positions[0].y = (tex.x + tex.y - 0.001) * global_height_scale;
+	positions[0].y = (tex.x + tex.y + global_water_offset_height) * global_height_scale;
 
 	positions[1] = gl_in[1].gl_Position.xyz;
 	tex = texture(simulation, vec2(positions[1].x, positions[1].z));
-	positions[1].y = (tex.x + tex.y - 0.001) * global_height_scale;
+	positions[1].y = (tex.x + tex.y + global_water_offset_height) * global_height_scale;
 	positions[2] = gl_in[2].gl_Position.xyz;
 
 	tex = texture(simulation, vec2(positions[2].x, positions[2].z));
-	positions[2].y = (tex.x + tex.y - 0.001) * global_height_scale;
+	positions[2].y = (tex.x + tex.y + global_water_offset_height) * global_height_scale;
 
 	vec3 u = normalize(positions[1] - positions[0]);
 	vec3 v = normalize(positions[2] - positions[0]);

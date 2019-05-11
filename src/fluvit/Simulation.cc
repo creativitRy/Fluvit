@@ -47,7 +47,7 @@ Simulation::Simulation(const std::string &image) : starting_terrain_height{} {
         // procedurally generate perlin terrain
         for (int col = 0; col < height; col++) {
             for (int row = 0; row < width; row++) {
-                auto h = (uint32_t) glm::clamp(perlin::noise(row * 0.25f, col * 0.25f) * 128.0 + 32.0, 0.0, 255.0);
+                auto h = (uint32_t) glm::clamp(perlin::noise(row * 0.25f, col * 0.25f) * 160.0 + 32.0, 0.0, 255.0);
                 starting_terrain_height.emplace_back(h);
             }
         }
