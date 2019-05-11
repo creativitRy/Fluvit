@@ -1,5 +1,7 @@
 R"zzz(
 #version 330 core
+uniform float evaporation_constant;
+
 uniform float delta_time;
 uniform sampler2D input_texture1;
 uniform sampler2D input_texture3;
@@ -23,12 +25,12 @@ float rand(vec2 co){
 }
 
 void main() {
-    vec4 tex = texture(input_texture1, pos);
-    float initial_height = tex.y;
-    float height = tex.x;
-    float water_height = height + tex.z;
-    float sediments_rel_height = tex.a;
+    vec4 tex1 = texture(input_texture1, pos);
+    vec4 tex3 = texture(input_texture3, pos);
 
-    output_texture1 = tex;
+    float s = texture(input_texture1, tex3.xy).z;
+    float d = tex1.y * (1 - delta_time * evaporation_constant);
+
+    output_texture1 = vec4(tex1.x, d, s, tex1.w);
 }
 )zzz"

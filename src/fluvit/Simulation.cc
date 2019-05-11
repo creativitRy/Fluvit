@@ -236,13 +236,15 @@ void Simulation::start() {
                                    input,
                                    {vertex_shader, nullptr, sim3_shader},
                                    {common_uniforms::instance.fixed_delta_time, input_texture1_swap, input_texture2,
-                                    grid_delta, CONSTANT(grid_distance_x), CONSTANT(grid_distance_y)},
+                                    grid_delta, CONSTANT(grid_distance_x), CONSTANT(grid_distance_y),
+                                    CONSTANT(sediment_capacity), CONSTANT(dissolving_constant),
+                                    CONSTANT(deposition_constant)},
                                    {"output_texture1", "output_texture3"}
         );
         passes[3] = new RenderPass(-1,
                                    input,
                                    {vertex_shader, nullptr, sim4_shader},
-                                   {common_uniforms::instance.fixed_delta_time, input_texture1, input_texture3},
+                                   {common_uniforms::instance.fixed_delta_time, input_texture1, input_texture3, CONSTANT(evaporation_constant)},
                                    {"output_texture1"}
         );
     }
@@ -257,7 +259,7 @@ void Simulation::update() {
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, swap_texture1 ? texture1 : texture1_swap, 0);
 
         glViewport(0, 0, width, height);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDisable(GL_BLEND); // enable storing stuff in alpha channel
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -271,7 +273,7 @@ void Simulation::update() {
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, swap_texture2 ? texture2 : texture2_swap, 0);
 
         glViewport(0, 0, width, height);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDisable(GL_BLEND);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -288,7 +290,7 @@ void Simulation::update() {
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, texture3, 0);
 
         glViewport(0, 0, width, height);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDisable(GL_BLEND);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

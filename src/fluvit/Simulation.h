@@ -24,6 +24,11 @@ namespace simulation_constants {
     constexpr float grid_distance_x = 1.0f;
     constexpr float grid_distance_y = 1.0f;
 
+    constexpr float sediment_capacity = 0.01f;
+    constexpr float dissolving_constant = 0.001f;
+    constexpr float deposition_constant = 0.001f;
+
+    constexpr float evaporation_constant = 0.01f;
 }
 
 class Simulation : public Entity {
