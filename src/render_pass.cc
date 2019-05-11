@@ -87,7 +87,9 @@ RenderPass::RenderPass(int vao, // -1: create new VAO, otherwise use given VAO
     }
     // .. bind output position
     for (size_t i = 0; i < output.size(); i++) {
-        CHECK_GL_ERROR(glBindFragDataLocation(sp_, i, output[i]));
+        if (output[i] != nullptr) {
+            CHECK_GL_ERROR(glBindFragDataLocation(sp_, i, output[i]));
+        }
     }
     // ... then we can link
     glLinkProgram(sp_);

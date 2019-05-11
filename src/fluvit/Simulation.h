@@ -42,7 +42,7 @@ class Simulation : public Entity {
     /// a = initial terrain height
     GLuint texture1;
     GLuint texture1_swap;
-    bool swap_texture1 = false; // if false, then texture1_swap is output
+    bool swap_texture1 = true; // if false, then texture1_swap is output
     /// r = right flow
     /// g = top flow
     /// b = left flow

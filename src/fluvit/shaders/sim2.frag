@@ -12,7 +12,7 @@ uniform float grid_distance_y;
 uniform vec2 grid_delta;
 
 in vec2 pos;
-layout (location = 1) out vec4 output_texture2;
+layout (location = 0) out vec4 output_texture2;
 
 /*
 2.1. Flow is simulated

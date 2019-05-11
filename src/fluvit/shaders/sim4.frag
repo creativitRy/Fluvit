@@ -5,7 +5,7 @@ uniform sampler2D input_texture1;
 uniform sampler2D input_texture3;
 
 in vec2 pos;
-layout (location = 4) out vec4 output_texture1;
+layout (location = 0) out vec4 output_texture1;
 
 /*
 5 steps:
@@ -29,6 +29,6 @@ void main() {
     float water_height = height + tex.z;
     float sediments_rel_height = tex.a;
 
-    output_texture1 = vec4(height, initial_height, clamp(water_height - height, 0.0, 1.0), sediments_rel_height);
+    output_texture1 = tex;
 }
 )zzz"

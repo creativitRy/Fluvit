@@ -1,12 +1,17 @@
 R"zzz(
 #version 330 core
+uniform float grid_distance_x;
+uniform float grid_distance_y;
+
+uniform vec2 grid_delta;
+
 uniform float delta_time;
 uniform sampler2D input_texture1;
 uniform sampler2D input_texture2;
 
 in vec2 pos;
-layout (location = 2) out vec4 output_texture1;
-layout (location = 3) out vec4 output_texture3;
+layout (location = 0) out vec4 output_texture1;
+layout (location = 1) out vec4 output_texture3;
 
 /*
 5 steps:
@@ -25,11 +30,22 @@ float rand(vec2 co){
 
 void main() {
     vec4 tex = texture(input_texture1, pos);
-    float initial_height = tex.y;
-    float height = tex.x;
-    float water_height = height + tex.z;
-    float sediments_rel_height = tex.a;
+    float b_prev = tex.x;
+    float d_prev = tex.y;
+    float s_prev = tex.z;
 
-    output_texture1 = vec4(height, initial_height, clamp(water_height - height, 0.0, 1.0), sediments_rel_height);
+    vec4 flow_center = texture(input_texture2, pos);
+    float flow_center_sum = flow_center.x + flow_center.y + flow_center.z + flow_center.w;
+
+    float laplacian_estimate = texture(input_texture2, max(vec2(0.0), pos - vec2(grid_delta.x, 0.0))).x
+        + texture(input_texture2, max(vec2(0.0), pos - vec2(0.0, grid_delta.y))).y
+        + texture(input_texture2, min(vec2(1.0), pos + vec2(grid_delta.x, 0.0))).z
+        + texture(input_texture2, min(vec2(1.0), pos + vec2(0.0, grid_delta.y))).w
+        - flow_center_sum;
+
+    float d_next = d_prev + delta_time / grid_distance_x / grid_distance_y * laplacian_estimate;
+
+    output_texture1 = vec4(b_prev, d_next, s_prev, tex.w);
+    output_texture3 = vec4(1.0);
 }
 )zzz"

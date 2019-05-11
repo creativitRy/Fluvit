@@ -206,7 +206,8 @@ void Simulation::start() {
             return texture3;
         });
 
-        grid_delta = make_uniform("grid_delta", (std::function<glm::vec2()>) [this]() { return 1.0f / glm::vec2(width, height); });
+        grid_delta = make_uniform("grid_delta",
+                                  (std::function<glm::vec2()>) [this]() { return 1.0f / glm::vec2(width, height); });
     }
 
     // render pass
@@ -234,7 +235,8 @@ void Simulation::start() {
         passes[2] = new RenderPass(-1,
                                    input,
                                    {vertex_shader, nullptr, sim3_shader},
-                                   {common_uniforms::instance.fixed_delta_time, input_texture1_swap, input_texture2},
+                                   {common_uniforms::instance.fixed_delta_time, input_texture1_swap, input_texture2,
+                                    grid_delta, CONSTANT(grid_distance_x), CONSTANT(grid_distance_y)},
                                    {"output_texture1", "output_texture3"}
         );
         passes[3] = new RenderPass(-1,
@@ -247,12 +249,15 @@ void Simulation::start() {
 }
 
 void Simulation::update() {
+    swap_texture1 = !swap_texture1;
+
     // sim 1
     {
         glBindFramebuffer(GL_FRAMEBUFFER, fbos[0]);
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, swap_texture1 ? texture1 : texture1_swap, 0);
 
         glViewport(0, 0, width, height);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glDisable(GL_BLEND); // enable storing stuff in alpha channel
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -266,6 +271,7 @@ void Simulation::update() {
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, swap_texture2 ? texture2 : texture2_swap, 0);
 
         glViewport(0, 0, width, height);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glDisable(GL_BLEND);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -282,6 +288,7 @@ void Simulation::update() {
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, texture3, 0);
 
         glViewport(0, 0, width, height);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glDisable(GL_BLEND);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -295,12 +302,12 @@ void Simulation::update() {
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, swap_texture1 ? texture1 : texture1_swap, 0);
 
         glViewport(0, 0, width, height);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDisable(GL_BLEND);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         passes[3]->setup();
         passes[3]->render();
     }
-
-    swap_texture1 = !swap_texture1;
 }
