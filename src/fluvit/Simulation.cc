@@ -131,11 +131,7 @@ void Simulation::update() {
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, render_texture[output_to_second_texture ? 1 : 0], 0);
 
         glViewport(0, 0, width, height);
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glEnable(GL_MULTISAMPLE);
-        glEnable(GL_BLEND);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_BLEND); // enable storing stuff in alpha channel
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         pass->setup();

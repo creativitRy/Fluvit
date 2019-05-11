@@ -21,12 +21,6 @@ float rand(vec2 co){
     return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
 }
 
-float noise(vec3 pos) {
-    float a = rand(vec2(ivec2(vec2(pos.x, pos.z) * 16 + vec2(0.01))) / 16.0);
-    float b = rand(vec2(a, float(int(pos.y * 16 + 0.01)) / 16.0));
-    return b;
-}
-
 void main() {
     vec4 tex = texture(input_texture, pos);
     float initial_height = tex.y;
@@ -34,6 +28,6 @@ void main() {
     float water_height = height + tex.z;
     float sediments_rel_height = tex.a;
 
-    fragment_color = vec4(height, initial_height, clamp(water_height - height, 0.0, 1.0), 1.0);
+    fragment_color = vec4(height, initial_height, clamp(water_height - height, 0.0, 1.0), sediments_rel_height);
 }
 )zzz"
