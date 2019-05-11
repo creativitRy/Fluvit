@@ -5,7 +5,7 @@ uniform sampler2D input_texture1;
 uniform sampler2D input_texture3;
 
 in vec2 pos;
-layout (location = 0) out vec4 output_texture1;
+layout (location = 4) out vec4 output_texture1;
 
 /*
 5 steps:

@@ -164,8 +164,8 @@ void Simulation::start() {
             }
 
             glBindFramebuffer(GL_FRAMEBUFFER, fbos[3]);
-            glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture1_swap, 0);
-            DrawBuffers[0] = GL_COLOR_ATTACHMENT0;
+            glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, texture1_swap, 0);
+            DrawBuffers[0] = GL_COLOR_ATTACHMENT4;
             glDrawBuffers(1, DrawBuffers);
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
                 std::cerr << "Framebuffer sim4 error :(" << std::endl;
@@ -288,7 +288,7 @@ void Simulation::update() {
     // sim 4
     {
         glBindFramebuffer(GL_FRAMEBUFFER, fbos[3]);
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, swap_texture1 ? texture1 : texture1_swap, 0);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, swap_texture1 ? texture1 : texture1_swap, 0);
 
         glViewport(0, 0, width, height);
         glDisable(GL_BLEND);
