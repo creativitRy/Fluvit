@@ -11,6 +11,8 @@
 #include "pngio.h"
 #include "../time.h"
 
+#define CONSTANT(variable) make_uniform(#variable, (std::function<float()>) []() { return simulation_constants::variable; })
+
 namespace {
 // @formatter:off
 const char *vertex_shader =
@@ -210,10 +212,13 @@ void Simulation::start() {
         input.assign(0, "vertex_position", vertices.data(), vertices.size(), 4, GL_FLOAT);
         input.assignIndex(faces.data(), faces.size(), 3);
 
+        // todo: user input
         passes[0] = new RenderPass(-1,
                                    input,
                                    {vertex_shader, nullptr, sim1_shader},
-                                   {common_uniforms::instance.fixed_delta_time, input_texture1},
+                                   {common_uniforms::instance.fixed_time, common_uniforms::instance.fixed_delta_time, input_texture1,
+                                    CONSTANT(min_raindrop_radius), CONSTANT(max_raindrop_radius),
+                                    CONSTANT(min_raindrop_amount), CONSTANT(max_raindrop_amount)},
                                    {"output_texture1"}
         );
         passes[1] = new RenderPass(-1,

@@ -21,15 +21,15 @@ void main() {
 
 	positions[0] = gl_in[0].gl_Position.xyz;
 	tex = texture(simulation, vec2(positions[0].x, positions[0].z));
-	positions[0].y = (tex.x + tex.z - 0.001) * global_height_scale;
+	positions[0].y = (tex.x + tex.y - 0.001) * global_height_scale;
 
 	positions[1] = gl_in[1].gl_Position.xyz;
 	tex = texture(simulation, vec2(positions[1].x, positions[1].z));
-	positions[1].y = (tex.x + tex.z - 0.001) * global_height_scale;
+	positions[1].y = (tex.x + tex.y - 0.001) * global_height_scale;
 	positions[2] = gl_in[2].gl_Position.xyz;
 
 	tex = texture(simulation, vec2(positions[2].x, positions[2].z));
-	positions[2].y = (tex.x + tex.z - 0.001) * global_height_scale;
+	positions[2].y = (tex.x + tex.y - 0.001) * global_height_scale;
 
 	vec3 u = normalize(positions[1] - positions[0]);
 	vec3 v = normalize(positions[2] - positions[0]);

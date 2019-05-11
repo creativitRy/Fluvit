@@ -12,6 +12,15 @@
 #include "../Entity.h"
 #include "../render_pass.h"
 
+namespace simulation_constants {
+    constexpr float min_raindrop_radius = 0.002f;
+    constexpr float max_raindrop_radius = 0.015f;
+
+    constexpr float min_raindrop_amount = 0.0f;
+    constexpr float max_raindrop_amount = 0.2f;
+
+}
+
 class Simulation : public Entity {
     int width = 1024;
     int height = 1024;

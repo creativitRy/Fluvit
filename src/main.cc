@@ -94,6 +94,7 @@ int main(int argc, char *argv[]) {
     std::function<glm::vec4()> lp_data = [&light_position]() { return light_position; };
     std::function<float()> time_data = []() { return Time::time; };
     std::function<float()> fixed_delta_time_data = []() { return Time::fixed_delta_time; };
+    std::function<float()> fixed_time_data = []() { return Time::fixed_time; };
 
     common_uniforms::instance.view = make_uniform("view", view_data);
     common_uniforms::instance.camera_position = make_uniform("camera_position", cam_data);
@@ -101,6 +102,7 @@ int main(int argc, char *argv[]) {
     common_uniforms::instance.light_position = make_uniform("light_position", lp_data);
     common_uniforms::instance.time = make_uniform("time", time_data);
     common_uniforms::instance.fixed_delta_time = make_uniform("delta_time", fixed_delta_time_data);
+    common_uniforms::instance.fixed_time = make_uniform("time", fixed_time_data);
 
     // start
     sim.start();
