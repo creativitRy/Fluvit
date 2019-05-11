@@ -19,7 +19,7 @@ namespace simulation_constants {
     constexpr float min_raindrop_amount = 0.0f;
     constexpr float max_raindrop_amount = 0.2f;
 
-    constexpr float gravity = 9.81f / 64.0f;
+    constexpr float gravity = 9.81f / 2.0f;
     constexpr float area_over_len = 1.0f;
     constexpr float grid_distance_x = 1.0f;
     constexpr float grid_distance_y = 1.0f;

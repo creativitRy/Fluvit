@@ -10,4 +10,5 @@
 
 * http://graphics.cs.brown.edu/games/IsoHeightfield/mcguiresibley04iso.pdf
 * https://hal.inria.fr/inria-00402079/document
+* http://old.cescg.org/CESCG-2011/papers/TUBudapest-Jako-Balazs.pdf
 * 

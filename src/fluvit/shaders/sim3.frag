@@ -79,6 +79,6 @@ void main() {
     }
 
     output_texture1 = vec4(b_next, d_next, s_next, tex.w);
-    output_texture3 = vec4(clamp(pos - delta_time * velocity, vec2(0.0), vec2(1.0)), 0.0, 0.0);
+    output_texture3 = vec4(clamp(pos - delta_time * velocity, vec2(0.0), vec2(1.0)), sin_alpha, 0.0);
 }
 )zzz"

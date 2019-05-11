@@ -38,10 +38,15 @@ void Terrain::start() {
     model = make_uniform("model", (std::function<glm::mat4()>) []() {
         return glm::translate(glm::vec3(-0.5f, 0, -0.5f));
     });
-    sim_texture = make_texture("simulation", (std::function<uint32_t()>) [this]() {
+    sim_texture1 = make_texture("simulation1", (std::function<uint32_t()>) [this]() {
         return simulation->get_sampler();
     }, 0, (std::function<uint32_t()>) [this]() {
         return simulation->get_texture1();
+    });
+    sim_texture3 = make_texture("simulation3", (std::function<uint32_t()>) [this]() {
+        return simulation->get_sampler();
+    }, 1, (std::function<uint32_t()>) [this]() {
+        return simulation->get_texture3();
     });
 
     input.assign(0, "vertex_position", vertices.data(), vertices.size(), 4, GL_FLOAT);
@@ -50,14 +55,14 @@ void Terrain::start() {
                           input,
                           {vertex_shader, geometry_shader, fragment_shader},
                           {model, common_uniforms::instance.view, common_uniforms::instance.projection,
-                           common_uniforms::instance.light_position, sim_texture},
+                           common_uniforms::instance.light_position, sim_texture1, sim_texture3},
                           {"fragment_color"}
     );
     water_pass = new RenderPass(-1,
                           input,
                           {vertex_shader, water_geometry_shader, water_fragment_shader},
                           {model, common_uniforms::instance.view, common_uniforms::instance.projection,
-                           common_uniforms::instance.light_position, sim_texture},
+                           common_uniforms::instance.light_position, sim_texture1},
                           {"fragment_color"}
     );
 }

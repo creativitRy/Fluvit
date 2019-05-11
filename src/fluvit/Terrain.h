@@ -30,7 +30,8 @@ private:
     std::vector<glm::uvec3> faces;
 
     std::shared_ptr<ShaderUniformBase> model;
-    std::shared_ptr<TextureCombo> sim_texture;
+    std::shared_ptr<TextureCombo> sim_texture1;
+    std::shared_ptr<TextureCombo> sim_texture3;
 
     RenderDataInput input;
     RenderPass *terrain_pass;
