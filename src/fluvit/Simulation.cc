@@ -63,6 +63,11 @@ void Simulation::start() {
         faces.emplace_back(3, 2, 1);
     }
 
+    // textures setup
+    {
+
+    }
+
     // fbo setup
     {
         // create FBO (off-screen framebuffer)
@@ -81,7 +86,7 @@ void Simulation::start() {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         }
 
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, render_texture[output_to_second_texture ? 1 : 0], 0);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, render_texture[swap_texture2 ? 1 : 0], 0);
         // Set the list of draw buffers.
         GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
         glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
@@ -106,7 +111,7 @@ void Simulation::start() {
         input_texture = make_texture("input_texture", (std::function<uint32_t()>) [this]() {
             return get_sampler();
         }, 0, (std::function<uint32_t()>) [this]() {
-            return render_texture[output_to_second_texture ? 0 : 1];
+            return render_texture[swap_texture2 ? 0 : 1];
         });
     }
 
@@ -117,7 +122,7 @@ void Simulation::start() {
         pass = new RenderPass(-1,
                               input,
                               {vertex_shader, nullptr, fragment_shader},
-                              {common_uniforms::instance.fixed_time, input_texture},
+                              {common_uniforms::instance.fixed_delta_time, input_texture},
                               {"fragment_color"}
         );
     }
@@ -128,7 +133,7 @@ void Simulation::update() {
         // Render to our framebuffer
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
         // Set render_texture as our color attachment #0
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, render_texture[output_to_second_texture ? 1 : 0], 0);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, render_texture[swap_texture2 ? 1 : 0], 0);
 
         glViewport(0, 0, width, height);
         glDisable(GL_BLEND); // enable storing stuff in alpha channel
@@ -137,6 +142,6 @@ void Simulation::update() {
         pass->setup();
         pass->render();
 
-        output_to_second_texture = !output_to_second_texture;
+        swap_texture2 = !swap_texture2;
     }
 }

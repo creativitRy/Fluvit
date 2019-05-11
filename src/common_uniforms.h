@@ -14,7 +14,7 @@ public:
     std::shared_ptr<ShaderUniformBase> projection;
     std::shared_ptr<ShaderUniformBase> light_position;
     std::shared_ptr<ShaderUniformBase> time;
-    std::shared_ptr<ShaderUniformBase> fixed_time;
+    std::shared_ptr<ShaderUniformBase> fixed_delta_time;
 };
 
 #endif //GLSL_COMMON_UNIFORMS_H

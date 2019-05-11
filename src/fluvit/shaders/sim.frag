@@ -1,6 +1,6 @@
 R"zzz(
 #version 330 core
-uniform float fixed_time;
+uniform float delta_time;
 uniform sampler2D input_texture;
 
 in vec2 pos;

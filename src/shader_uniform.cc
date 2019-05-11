@@ -86,6 +86,7 @@ make_texture(const std::string& name,
              std::function<unsigned()> texture_source)
 {
 	auto ret = std::make_shared<TextureCombo>();
+	ret->name = name;
 	ret->sampler_source = sampler_source;
 	ret->texture_unit = texture_unit;
 	ret->texture_source = texture_source;
