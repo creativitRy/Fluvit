@@ -1,10 +1,31 @@
-1. Gahwon Lee
+# Fluvit
 
-2. You might have to hit ctrl+F multiple times to get it working. If you release a key and you are still moving, try hitting the key again.
+_A hydraulic erosion simulation_
 
-3. Extra features:
-* Add two more types of cubes, including a water cube, and create smooth transitions between "ocean," "beach," and "land" terrain regions
-* Frustum culling = process around half a million blocks in 30 fps
+Gahwon Lee
+
+### Compiling
+
+```
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j8
+```
+
+### How to Run
+* `./fluvit -h` for help
+* `./fluvit path/to/png` to load heightmap
+* `./fluvit` for random terrain
+
+
+### Controls
+
+Right click and WASD to fly
+
+### eCIS
+
+I affirm on my honor that I've submitted the survey.
 
 ### Credits
 

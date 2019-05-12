@@ -32,7 +32,7 @@ void main() {
 
     vec4 f_prev = texture(input_texture2, pos);
     vec4 height_difference = vec4(center - right, center - top, center - left, center - bottom);
-    vec4 f_next = max(vec4(0.0), f_prev + area_over_len * gravity * height_difference);
+    vec4 f_next = max(vec4(0.0), f_prev + delta_time * area_over_len * gravity * height_difference);
     float k = min(1.0, center_tex.y * grid_distance_x * grid_distance_y / (f_next.x + f_next.y + f_next.z + f_next.w) / delta_time);
 
     output_texture2 = f_next * k;

@@ -28,9 +28,15 @@ void main() {
     vec4 tex1 = texture(input_texture1, pos);
     vec4 tex3 = texture(input_texture3, pos);
 
+    float b = tex1.x;
     float s = texture(input_texture1, tex3.xy).z;
     float d = tex1.y * (1 - delta_time * evaporation_constant);
+    if (d <= 0.001) {
+        d = 0.0;
+        b += s;
+        s = 0.0;
+    }
 
-    output_texture1 = vec4(tex1.x, d, s, tex1.w);
+    output_texture1 = vec4(b, d, s, tex1.w);
 }
 )zzz"

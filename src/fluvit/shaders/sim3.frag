@@ -50,9 +50,10 @@ void main() {
 
     float d_next = d_prev + delta_time / grid_distance_x / grid_distance_y * laplacian_estimate;
 
-    vec2 velocity = vec2(flow_left.x - flow_center.z + flow_center.x - flow_right.z, flow_bottom.y - flow_center.w + flow_center.y - flow_top.w);
-    if (d_next + d_prev > 0)
-        velocity = velocity / (d_next + d_prev) / vec2(grid_distance_y, grid_distance_x);
+    vec2 velocity = vec2((flow_left.x - flow_center.z + flow_center.x - flow_right.z) / grid_distance_y,
+        (flow_bottom.y - flow_center.w + flow_center.y - flow_top.w) / grid_distance_x);
+    if (d_next + d_prev != 0)
+        velocity = velocity / (d_next + d_prev);
     else
         velocity = vec2(0.0);
 
@@ -64,21 +65,23 @@ void main() {
 
     float sin_alpha = sqrt(db_dot / (1 + db_dot));
 
-    float c = sediment_capacity * sin_alpha * sqrt(dot(velocity, velocity));
+    float c = sediment_capacity * sin_alpha * sqrt(dot(velocity * grid_delta, velocity * grid_delta));
 
     float b_next;
     float s_next;
     if (c > s_prev) {
-        float delta = dissolving_constant * (c - s_prev);
+        float delta = delta_time * dissolving_constant * (c - s_prev);
         b_next = b_prev - delta;
         s_next = s_prev + delta;
+        //d_next = d_next + 0.5 * delta;
     } else {
-        float delta = deposition_constant * (s_prev - c);
+        float delta = delta_time * deposition_constant * (s_prev - c);
         b_next = b_prev + delta;
         s_next = s_prev - delta;
+        d_next = d_next - 0.5 * delta;
     }
 
     output_texture1 = vec4(b_next, d_next, s_next, tex.w);
-    output_texture3 = vec4(clamp(pos - delta_time * velocity, vec2(0.0), vec2(1.0)), sin_alpha, 0.0);
+    output_texture3 = vec4(clamp(pos - delta_time * velocity * grid_delta, vec2(0.0), vec2(1.0)), sin_alpha, 0.0);
 }
 )zzz"

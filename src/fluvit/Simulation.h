@@ -13,22 +13,25 @@
 #include "../render_pass.h"
 
 namespace simulation_constants {
+    constexpr float time_step = 1.0f / 60.0f;
+    constexpr float time_playback_speed = 1.0f;
+
     constexpr float min_raindrop_radius = 0.002f;
     constexpr float max_raindrop_radius = 0.015f;
 
     constexpr float min_raindrop_amount = 0.0f;
-    constexpr float max_raindrop_amount = 0.2f;
+    constexpr float max_raindrop_amount = 0.6f;
 
-    constexpr float gravity = 9.81f / 2.0f;
+    constexpr float gravity = 9.81f * 64.0f;
     constexpr float area_over_len = 1.0f;
     constexpr float grid_distance_x = 1.0f;
     constexpr float grid_distance_y = 1.0f;
 
-    constexpr float sediment_capacity = 0.05f;
-    constexpr float dissolving_constant = 0.00075f;
-    constexpr float deposition_constant = 0.00075f;
+    constexpr float sediment_capacity = 1.9f;
+    constexpr float dissolving_constant = 0.6f;
+    constexpr float deposition_constant = 0.6f;
 
-    constexpr float evaporation_constant = 5.0f;
+    constexpr float evaporation_constant = 1.0f;
 }
 
 class Simulation : public Entity {
@@ -55,8 +58,8 @@ class Simulation : public Entity {
     GLuint texture2;
     GLuint texture2_swap;
     bool swap_texture2 = false;
-    /// r = water velocity x
-    /// g = water velocity y
+    /// r = x - dt * water velocity x
+    /// g = y - dt * water velocity y
     /// b = previous timestep sin(local tilt angle) = sin(alpha)
     /// a = nothing
     GLuint texture3;
