@@ -49,21 +49,26 @@ void Terrain::start() {
         return simulation->get_texture3();
     });
 
+    auto global_height_scale = make_uniform("global_height_scale",
+                                            (std::function<float()>) []() { return simulation_constants::global_height_scale; });
+
     input.assign(0, "vertex_position", vertices.data(), vertices.size(), 4, GL_FLOAT);
     input.assignIndex(faces.data(), faces.size(), 3);
     terrain_pass = new RenderPass(-1,
-                          input,
-                          {vertex_shader, geometry_shader, fragment_shader},
-                          {model, common_uniforms::instance.view, common_uniforms::instance.projection,
-                           common_uniforms::instance.light_position, sim_texture1, sim_texture3},
-                          {"fragment_color"}
+                                  input,
+                                  {vertex_shader, geometry_shader, fragment_shader},
+                                  {model, common_uniforms::instance.view, common_uniforms::instance.projection,
+                                   common_uniforms::instance.light_position, sim_texture1, sim_texture3,
+                                   simulation->get_grid_delta(), global_height_scale},
+                                  {"fragment_color"}
     );
     water_pass = new RenderPass(-1,
-                          input,
-                          {vertex_shader, water_geometry_shader, water_fragment_shader},
-                          {model, common_uniforms::instance.view, common_uniforms::instance.projection,
-                           common_uniforms::instance.light_position, sim_texture1},
-                          {"fragment_color"}
+                                input,
+                                {vertex_shader, water_geometry_shader, water_fragment_shader},
+                                {model, common_uniforms::instance.view, common_uniforms::instance.projection,
+                                 common_uniforms::instance.light_position, sim_texture1, simulation->get_grid_delta(),
+                                 global_height_scale},
+                                {"fragment_color"}
     );
 }
 

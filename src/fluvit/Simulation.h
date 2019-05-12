@@ -28,10 +28,12 @@ namespace simulation_constants {
     constexpr float grid_distance_y = 1.0f;
 
     constexpr float sediment_capacity = 1.9f;
-    constexpr float dissolving_constant = 0.6f;
-    constexpr float deposition_constant = 0.6f;
+    constexpr float dissolving_constant = 0.5f;
+    constexpr float deposition_constant = 0.5f;
 
     constexpr float evaporation_constant = 1.0f;
+
+    constexpr float global_height_scale = 0.5f;
 }
 
 class Simulation : public Entity {
@@ -96,6 +98,8 @@ public:
     GLuint get_texture3() const { return texture3; }
 
     GLuint get_sampler() const { return sampler2d; }
+
+    std::shared_ptr<ShaderUniformBase> get_grid_delta() const { return grid_delta; }
 };
 
 
