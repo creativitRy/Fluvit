@@ -6,19 +6,9 @@ in vec4 world_position;
 uniform sampler2D simulation1;
 uniform sampler2D simulation3;
 uniform vec2 grid_delta;
+uniform int draw_mode;
 
 out vec4 fragment_color;
-
-float rand(vec2 co){
-	// https://stackoverflow.com/questions/4200224/random-noise-functions-for-glsl
-	return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
-}
-
-float noise(vec3 pos) {
-    float a = rand(vec2(ivec2(vec2(pos.x, pos.z) * 16 + vec2(0.01))) / 16.0);
-    float b = rand(vec2(a, float(int(pos.y * 16 + 0.01)) / 16.0));
-    return b;
-}
 
 void main() {
 	vec2 pos = world_position.xz;
@@ -56,7 +46,7 @@ void main() {
 	float curve = 0.5 * (kh + kv);
 	float neg_curvature = clamp(curve / 10000 + 1.0, 0.0, 1.0);
 
-	// ambient occlusion
+	// testing ambient occlusion please ignore
 	vec3 tangent = normalize(cross(normal.xyz, vec3(0.0, 0.0, 1.0)));
 	vec3 bitangent = normalize(cross(tangent, normal.xyz));
 	mat3 orthobasis = mat3(tangent, normal.xyz, bitangent);
@@ -80,8 +70,18 @@ void main() {
 	incident = pow(incident, 8.0);
 
 	vec3 color = vec3(0.8);
-	if (tex.z > 0)
-		color.g = 0.0;
+	if (draw_mode == 2) {
+		color = mix(vec3(134, 96, 67) / 256.0, vec3(180) / 256.0, clamp(1.0 - dot(normal, vec4(0.0, 1.5, 0.0, 0.0)), 0.0, 1.0) );
+		float change = tex.x - tex.w;
+		float abs_change = min(1.0, abs(change) * 16.0);
+		if (tex.w < tex.x)
+			color = mix(color, vec3(69, 110, 51) / 256.0, abs_change);
+		else
+			color = mix(color, vec3(180) / 256.0, abs_change);
+	} else {
+		if (tex.z > 0)
+			color.g = 0.0;
+	}
 	float dot_nl = dot(normalize(light_direction), normal);
 	dot_nl = clamp(dot_nl, 0.5, 1.0);
 	//dot_nl = clamp(dot_nl * neg_curvature, 0.4, 1.0);

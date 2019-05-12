@@ -6,6 +6,8 @@ in vec4 world_position;
 uniform sampler2D simulation1;
 uniform sampler2D simulation3;
 uniform vec2 grid_delta;
+uniform int draw_mode;
+uniform vec3 camera_position;
 
 out vec4 fragment_color;
 
@@ -32,7 +34,21 @@ void main() {
 
 	vec4 normal = vec4(-dx, 1.0f, -dy, 0.0);
 
-	vec3 color = vec3(0.4, 0.4 + (texture(simulation1, world_position.xz).z > 0 ? 0.6 : 0.0), 1.0);
+	vec3 color = vec3(0.4, 0.4, 1.0);
+	if (draw_mode == 2) {
+		float specular_contribution = 0.30;
+		vec4 light_vec = normalize(light_direction);
+		vec4 eye_vec = normalize(vec4(camera_position, 1.0) - world_position);
+		vec4 reflection = -reflect(light_vec, normal);
+		float specular = dot(normalize(reflection), eye_vec);
+		float specularShininess = 20.0f;
+		specular = max(pow(specular, specularShininess), 0.0);
+
+		color += vec3(specular);
+	} else {
+		if (texture(simulation1, world_position.xz).z > 0)
+			color.y = 1.0;
+	}
 	float dot_nl = dot(normalize(light_direction), normalize(normal));
 	dot_nl = clamp(dot_nl, 0.5, 1.0);
 	color = clamp(dot_nl * color, 0.0, 1.0);

@@ -59,7 +59,7 @@ void Terrain::start() {
                                   {vertex_shader, geometry_shader, fragment_shader},
                                   {model, common_uniforms::instance.view, common_uniforms::instance.projection,
                                    common_uniforms::instance.light_position, sim_texture1, sim_texture3,
-                                   simulation->get_grid_delta(), global_height_scale},
+                                   simulation->get_grid_delta(), global_height_scale, common_uniforms::instance.draw_mode},
                                   {"fragment_color"}
     );
     water_pass = new RenderPass(-1,
@@ -67,7 +67,7 @@ void Terrain::start() {
                                 {vertex_shader, water_geometry_shader, water_fragment_shader},
                                 {model, common_uniforms::instance.view, common_uniforms::instance.projection,
                                  common_uniforms::instance.light_position, sim_texture1, simulation->get_grid_delta(),
-                                 global_height_scale},
+                                 global_height_scale, common_uniforms::instance.draw_mode, common_uniforms::instance.camera_position},
                                 {"fragment_color"}
     );
 }

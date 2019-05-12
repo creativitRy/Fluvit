@@ -34,9 +34,9 @@ class Camera : public Entity {
     glm::mat4 view_matrix{1};
     glm::mat4 projection_matrix;
 
+public:
     RenderMode mode = RenderMode::normal;
 
-public:
     explicit Camera(float aspect);
 
     void start() override;
