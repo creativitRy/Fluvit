@@ -7,11 +7,16 @@
 
 
 struct Time {
+    static float unscaled_time;
+    static float unscaled_delta_time;
+
     static float time;
     static float delta_time;
 
     static float fixed_time;
     static float fixed_delta_time;
+
+    static bool playing;
 
     static void init();
     static void update();

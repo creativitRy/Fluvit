@@ -84,7 +84,7 @@ void main() {
 	}
 	float dot_nl = dot(normalize(light_direction), normal);
 	dot_nl = clamp(dot_nl, 0.5, 1.0);
-	//dot_nl = clamp(dot_nl * neg_curvature, 0.4, 1.0);
+	//dot_nl = clamp(dot_nl * incident, 0.4, 1.0);
 	color = clamp(dot_nl * color, 0.0, 1.0);
 	fragment_color = vec4(color, 1.0);
 }

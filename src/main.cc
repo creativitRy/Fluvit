@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
 
         // Setup some basic window stuff.
         std::stringstream title;
-        float cur_time = 1.0f / Time::delta_time;
+        float cur_time = 1.0f / Time::unscaled_delta_time;
         title << window_title << " FPS: "
               << std::setprecision(2)
               << std::setfill('0') << std::setw(2)

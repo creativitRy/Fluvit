@@ -21,13 +21,13 @@ void Camera::update() {
     }
 
     if (Input::right_click) {
-        yaw -= Input::mouse_x_delta * yaw_speed * Time::delta_time;
-        pitch -= Input::mouse_y_delta * pitch_speed * Time::delta_time;
+        yaw -= Input::mouse_x_delta * yaw_speed * Time::unscaled_delta_time;
+        pitch -= Input::mouse_y_delta * pitch_speed * Time::unscaled_delta_time;
         pitch = glm::clamp(pitch, -glm::half_pi<float>(), glm::half_pi<float>());
     }
 
     auto mat = glm::yawPitchRoll(yaw, pitch, 0.0f);
-    auto movement = Time::delta_time * move_speed * glm::vec4(Input::strafe, Input::updown, Input::zoom, 0);
+    auto movement = Time::unscaled_delta_time * move_speed * glm::vec4(Input::strafe, Input::updown, Input::zoom, 0);
     position += glm::vec3(mat * movement);
 
     view_matrix = glm::inverse(glm::translate(glm::mat4(1), position) * glm::yawPitchRoll(yaw, pitch, 0.0f));

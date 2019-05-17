@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include "gui.h"
 #include <jpegio.h>
 #include <iostream>
@@ -9,7 +10,7 @@
 #include <glm/gtx/transform.hpp>
 #include <unistd.h>
 #include <sys/wait.h>
-#include "Input.h"
+#include "time.h"
 
 
 GUI::GUI(GLFWwindow *window, int view_width, int view_height, int preview_height)
@@ -50,6 +51,9 @@ void GUI::keyCallback(int key, int scancode, int action, int mods) {
         std::cout << "Encoding and saving to file 'capture.jpg'" << std::endl;
         SaveJPEG("capture.jpg", window_width_, window_height_, pixels);
         return;
+    }
+    if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+        Time::playing = !Time::playing;
     }
 }
 
