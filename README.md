@@ -1,8 +1,10 @@
 # Fluvit
 
-_A hydraulic erosion simulation_
+##### A hydraulic erosion simulation
 
 Gahwon Lee
+
+![ ](https://thumbs.gfycat.com/AmpleCavernousAngelwingmussel-size_restricted.gif)
 
 ### Compiling
 
@@ -23,9 +25,9 @@ make -j8
 
 Right click and WASD to fly
 
-### eCIS
+1,2,3 = different ways to visualize terrain
 
-I affirm on my honor that I've submitted the survey.
+p to toggle playback
 
 ### Credits
 

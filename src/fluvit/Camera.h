@@ -24,7 +24,7 @@ class Camera : public Entity {
     static constexpr float pitch_speed = 0.3f;
     static constexpr float move_speed = 1.0f;
 
-    glm::vec3 position{0.0f, 1.0f, 0.0f};
+    glm::vec3 position{0.0f, 0.5f, 1.0f};
 
     /// up down [-pi, pi]
     float pitch = 0;

@@ -15,7 +15,7 @@ float Time::delta_time = 0;
 float Time::fixed_time = 0;
 float Time::fixed_delta_time = 0;
 
-bool Time::playing = false;
+bool Time::playing = true;
 
 void Time::init() {
     unscaled_time = 0;
